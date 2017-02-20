@@ -1,0 +1,305 @@
+@extends('app')
+
+@section('content')
+
+<script type="text/javascript" src="script/select_jquery.js"></script>
+<script>
+$(document).ready(function(){
+ 
+  $("#courseoffered").hide();
+  $("#courseincart").hide();
+
+   $("#courseincartdegree").hide();
+  $("#coursestatus").hide();
+  $("#requirements").hide();
+  $("#coursemessage").hide();
+    $("#degreeoffered").fadeIn();
+ 
+  $("#coursebtnoffered").click(function(){
+   $("#coursemessage").hide();
+   $("#degreeoffered").hide();
+   $("#courseincart").hide();
+   $("#courseincartdegree").hide();
+   $("#coursestatus").hide();
+   $("#requirements").hide();
+   $("#courseoffered").fadeIn();
+  });
+
+  $("#coursebtnstatus").click(function(){
+  $("#coursemessage").hide();
+  $("#degreeoffered").hide();
+  $("#courseincart").hide();
+  $("#courseincartdegree").hide();
+  $("#courseoffered").hide();
+$("#requirements").hide();
+  $("#coursestatus").fadeIn();
+  });
+  
+  $("#coursebtnincart").click(function(){
+  $("#coursemessage").hide();
+  $("#courseincartdegree").hide();
+  $("#coursestatus").hide();
+  $("#degreeoffered").hide();
+  $("#courseoffered").hide();
+  $("#requirements").hide();
+  $("#courseincart").fadeIn();
+  });
+  
+  $("#coursebtnincartdegree").click(function(){
+  $("#coursemessage").hide();
+  $("#coursestatus").hide();
+  $("#degreeoffered").hide();
+  $("#courseoffered").hide();
+  $("#requirements").hide();
+  $("#courseincart").hide();
+  $("#courseincartdegree").fadeIn();
+  });
+
+$("#coursebtnrequirement").click(function(){
+  $("#coursemessage").hide();
+  $("#coursestatus").hide();
+  $("#courseoffered").hide();
+  $("#courseincart").hide();
+  $("#degreeoffered").hide();
+  $("#courseincartdegree").hide();
+  $("#requirements").fadeIn();
+  });
+
+$("#degreebtnoffered").click(function(){
+  $("#coursemessage").hide();
+  $("#coursestatus").hide();
+  $("#courseoffered").hide();
+  $("#courseincart").hide();
+  
+  $("#courseincartdegree").hide();
+  $("#requirements").hide();
+  $("#degreeoffered").fadeIn();
+  });
+
+    });
+ 
+</script>
+
+
+<div class="container">
+    <div class="row">
+<div class="col-md-3 col-sm-12">
+     
+<div class="panel panel-default">
+ <div class="panel-body">   
+	<div class ="list-group">
+
+        <div class="list-group-item active"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><b> Profile</b></div>    
+	<div class = "list-group-item" id="profile">
+        <a href="#"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Your Personal Data</a>
+	</div>
+        </div>
+	
+	<div class="list-group">
+	<div class="list-group-item active"><span class="glyphicon glyphicon-certificate" aria-hidden="true"></span> <b>Academic Degree</b></div>    
+        @if(count($myselecteddegree) > 0)
+        <div class = "list-group-item" id="coursebtnrequirement">   
+        <a href="#"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Your Chosen Degree</a>
+        @else
+            <div class = "list-group-item" id="requesttoenroll">
+            <a href="#"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Request To Enroll</a>
+        @endif
+          </div>
+            <div class = "list-group-item" id="degreebtnoffered">
+            <a href="#"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Approved courses to be taken</a>
+
+        </div>
+        
+      
+        
+
+         
+	</div>
+
+    <hr />
+
+    <div class="list-group">
+        <div class="list-group-item active"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> <b>Short Courses</b></div>
+   <div class = "list-group-item" id="coursebtnstatus">
+        <a href="#"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>View Short Courses </a>
+        </div>
+        
+<div class = "list-group-item" id="coursebtnoffered">
+        <a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Course Offerings</a>
+        </div>
+
+
+        
+        </div>
+
+</div>
+</div>
+     </div>    
+
+    
+    
+<div class="col-md-6 col-sm-12">
+<div id="">
+    
+</div>    
+   
+<div id="coursemessage">
+</div>
+    
+<div id="degreeoffered">
+<div class="list-group-item active" style="background-color: maroon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <b>Student Information</b></div>
+    <table class="table table-striped">
+        <tr><td>Student ID</td><td></td></tr>
+        <tr><td>Student Name</td><td>{{ Auth::user()->fname }} {{ Auth::user()->lname }}</td></tr>
+        @if(count($myselecteddegree) > 0)
+        <tr><td>Program</td><td>{{$myselecteddegree[0]['programcode']}}</td></tr>
+        <tr><td>Program Description</td><td><span>{{$myselecteddegree[0]['programname']}}</span></td></tr>
+        @endif
+        <tr><td>Registered on</td><td>{{ Auth::user()->created_at }}</td></tr>
+                <tr><td>Status</td><td>
+            @if(Auth::user()->status == 0)
+            Registered
+            @elseif(Auth::user()->status == 1)
+            Enrolled
+            @endif
+                        
+            </td></tr>
+    </table>
+<hr /> 
+@if(count($myselecteddegree) > 0)
+<p>Below are approved courses that you can take on this term.  
+    You may enroll all the courses by clicking the <strong>[Enroll Now]</strong> button or Select only the courses you wish to enroll and press <strong>[Enroll Now]</strong> button.  You may take a minimum of 3 (three) courses or a maximum of 7 (seven) courses at a time.</p>
+
+<?php $totalunits=0; ?>
+<table class="table table-bordered">
+{!! Form::open() !!}
+<thead style="background-color: maroon; color: #ffffff">
+    <tr><th><b>Course</b></th><th><b>Course Description</b></th><th><b>Units</b></th></tr>
+</thead>
+<tbody>
+<?php $sel='0'; ?>
+@foreach($myselecteddegree as $selecteddegree)
+@if($selecteddegree->status == "1")
+<tr><td>
+<?php $totalunits = $totalunits + $selecteddegree->unit;?>        
+<input name="courses[]" checked="checked"  type="checkbox" value = "{{$selecteddegree->subjectcode }}"> {{$selecteddegree->subjectcode}}</td><td>{{$selecteddegree->subjectname}}</td>
+<td align="center">{{$selecteddegree->unit}}</td></tr>
+    <?php $sel='1'; ?>
+@endif
+@endforeach
+<tr><td></td><td><b>Total approved units</td></td><td align="center"><b><?php echo $totalunits; ?></b></td></tr>
+<tr>
+<td colspan="3">
+<input type="hidden" value="{{ $requestid }}" name ="requestid">
+<input type="hidden" value="1" name="coursetype">
+@if($sel=='1')
+<input type="submit" value="Enroll Now" class="btn btn-primary form-control">
+@else
+<p>You Have No Subjects to Enroll.. Please notify AMA for further detatails</p>
+@endif
+@endif
+</td></tr>
+{!! Form::close() !!}
+
+</tbody>
+</table>
+    </div>
+    
+ <div id="courseoffered">
+<h1>Choose course to enroll</h1>
+{!! Form::open() !!}
+@foreach($courseofferings as $courseoffered)
+<input name="courses[]" type="checkbox" value = "{{$courseoffered->id }}"> {{$courseoffered->coursename}} <br />
+@endforeach
+<input type="hidden" value="0" name="coursetype">
+<input type="hidden" value="{{ $requestid }}" name ="requestid">
+<input type="submit" value="Enroll Now" class="btn btn-primary form-control">
+{!! Form::close() !!}
+    </div>
+    
+<div id="requirements">
+@if(count($myselecteddegree) > 0)
+    <h3> Program : {{$myselecteddegree[0]['programcode']}}</h3>
+    <h5>{{$myselecteddegree[0]['programname']}}</h5>
+    <table class="table table-striped"><thead><tr><th>Course Name</th><th>Remarks</th></tr></thead>
+    <tbody>
+ @foreach($myselecteddegree as $selecteddegree)
+         <tr><td>{{$selecteddegree->subjectname}}</td> <td>
+     @if($selecteddegree->status == '0')
+     Not Taken Yet
+     @elseif($selecteddegree->status=='1')
+     Approved
+     @elseif($selecteddegree->status=='2')
+     <span style="color:red">Enrolled</span>
+     @elseif($selecteddegree->status=='3')
+     <span style="font-weight: bold;color:blue">Credited</span>
+     @elseif($selecteddegree->status=='5')
+     For Payment
+     @endif
+                 
+     </td></tr>
+ @endforeach
+
+ </table>
+ @endif
+</div>
+
+
+
+    <div id="courseincart">
+    <h1> My Short Courses on Cart</h1>
+    <table class="table table-striped"><thead><tr><td>Course Name</td><td>Action</td></tr></thead><tbody>
+        @foreach($mycourses as $mycourse)
+        <tr><td>{{$mycourse->coursename}}</td><td><a href="{{url('/book/delete',$mycourse->id)}}">Remove</a></td></tr>
+        @endforeach
+    </tbody></table>    
+    <div class="form-group">
+        {!! $md !!}
+        </div>
+    </div>
+    
+    <div id="courseincartdegree">
+    <h1> My Degree Courses on Cart</h1>
+    <table class="table table-striped"><thead><tr><td>Course Name</td><td>Action</td></tr></thead><tbody>
+        @foreach($mydegree as $mycourse)
+        <tr><td>{{$mycourse->coursename}}</td><td><a href="{{url('/book/delete',$mycourse->id)}}">Remove</a></td></tr>
+        @endforeach
+    </tbody></table>    
+    <div class="form-group">
+        {!! $md1 !!}
+        </div>
+    </div>
+    
+    <div id='coursestatus'>
+    <h1>My Courses</h1>
+    <table class="table table-striped"><thead><tr><td>Course Name</td><td>Status</td></tr></thead><tbody>
+        @foreach($myallcourses as $myallcourse)
+        <tr><td>{{$myallcourse->coursename}}</td><td>{{$myallcourse->paymentmessage}}</td></tr>
+        @endforeach
+    </tbody></table>    
+    </div>
+</div>    
+<div class="col-md-3 col-sm-12">
+
+   
+         
+ <div style="padding: 10px; background-color: #99CCFF; ">
+        <div class="btn btn-danger form-control"><strong>ACADEMIC DEGREE</strong></div>
+        <h2 id="totalPaymet" style="color: maroon" class="pull-right">PHP {{ $amount1 }}.00</h2>
+        <div class="clearfix"></div>
+        <div class="form-group">
+        
+        </div>
+         <a href="#" style="font-size: 10pt;" class="btn form-control" id="coursebtnincartdegree">View Payment Details</a>
+    </div>  
+    <div style="padding: 10px; background-color: papayawhip;margin-top:20px;">
+        <div class="btn btn-danger form-control"><strong>SHORT COURSES</strong></div>
+        <h2 id="totalPaymet" style="color: maroon" class="pull-right">PHP {{ $amount }}.00</h2>
+        <div class="clearfix"></div>
+         <a href="#" style="font-size: 10pt;" class="btn form-control" id="coursebtnincart">View Payment Details</a>
+       
+    </div>  
+</div>
+ </div> 
+    </div>
+@stop

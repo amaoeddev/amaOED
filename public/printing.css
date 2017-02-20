@@ -1,0 +1,33 @@
+    table{
+        border: 1px solid;
+    }
+    td{
+        border: 1px solid;
+    }
+    th{
+        border: 1px solid;
+    }    
+    p.header{
+            font-size: 10px;
+            margin-bottom: 0px;
+            margin-top: 0px;
+    }
+    h4.header{
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    @media print{
+    table { page-break-inside:auto }
+    tr{ page-break-inside:avoid; page-break-after:auto }
+    
+    } 
+    masterlist {
+        display: block;
+        page: masterlist;
+        counter-reset: page 1
+    }    
+        @page masterlist {
+            @top-right {
+               content: counter(page) " of " counter(pages);
+            }
+        }

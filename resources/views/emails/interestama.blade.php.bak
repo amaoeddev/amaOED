@@ -1,0 +1,2 @@
+Please be informed that <b>{{$lastname}}, {{$firstname}} </b> with email addresss {{$studentemail}} 
+has submitted his/her interest in {{$course}} and requirements for evaluation.
